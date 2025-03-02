@@ -1,0 +1,30 @@
+
+THY Web Sitesi 
+---Genel İşleyişi---
+Sistemde üç tür kullanıcı bulunmaktadır: Yönetici, Görevli ve Müşteri. Ayrıyeten sisteme kayıtlı olmadan bilet almak isteyen müşteriler de bilgilerini girerek bilet alabilir. Her kullanıcı sisteme isterse üyelik numarası ve şifre,eposta ve şifre,cep telefonu ve şifre ya da tckimlik ve şifre ile giriş yapabilir. Kullanıcılar sisteme yönetici tarafından eklenebilir. Her grubun rolleri aşağıdaki gibidir:
+Yönetici:
+•	Yönetici uçak ekleyebilir,güncelleyebilir,silebilir veya uçakları görebilir.
+•	Yönetici uçuş ekleyebilir,güncelleyebilir,silebilir veya uçuşları görebilir.
+•	Yönetici havaalanı ekleyebilir,silebilir,güncelleyebilir veya havaalanlarını görebilir.
+•	Yönetici kullanıcı, görevli veya yönetici ekleyebilir,silebilir,güncelleyebilir ve sisteme kayıtlı tüm kullanıcıları görebilir.
+•	Yönetici görevlinin girdiği uçaklarla ilgili hataları görebilir.
+Müşteri:
+•	Müşteri sisteme üye olarak bilet alabilir veya üye olmadan bilgilerini girerek bilet alabilir.
+•	Müşteri seçtiği uçuşun bir paketini seçip rezervasyon yapabilir.
+•	Müşteri rezervasyon yaptığı uçuşun koltuğunu 100 tl ücret ile seçip ödemeyi yaparak bilet oluşturmalıdır.
+•	Müşteri eğer sisteme üyeyse her aldığı bilet başına 500 mil kazanır ve bu milleri her 100 milde %1 indirim olmak üzere indirim için kullanabilir(Eğer bilet iptali olduğunda verilen milin iadesi de olur).
+•	Müşteri aldığı biletin bilgilerini görebilir, bilette yer alan iletişim bilgilerini güncelleyebilir veya biletini iptal edebilir.
+•	Müşteri bilet aldığı koltuğu check-in yaparak değiştirebilir.
+•	Müşteri bilet aldığı uçuşun durumunu sorgulayabilir.
+Görevli:
+•	Görevli sistemde kayıtlı uçuşların kalkış ve iniş yapmasını onaylayabilir.
+•	Görevli uçağa ait hata raporu girebilir.
+•	Görevli sistemde kayıtlı uçakların yakıt durumunu güncelleyebilir.
+•	Görevli uçuşların kalkış ve varış kapılarını güncelleyebilir.
+•	Görevli uçakların müsaitli durumunu güncelleyebilir.
+•	Görevli yaklaşan uçuşları görebilir.
+---Uygulamayı Hazır Hale Getirme(Kurulum)---
+•	Öncelikle projenin içinde bulunan DBFly.bacpac dosyasını(potansiyel veritabanı) MS SQL SERVER'a eklemek için Databases klasörüne sağ tıklayıp Import Data-tier Application'a tıklıyoruz. Burda gerekli bacpac uzantılı dosyamızı bulup ekliyoruz. Gerekli işlemleri tamamladıktan sonra veritabanımız hazır.
+•	THYWebApp klasoründen THYWebApp.sln dosyasını açıyoruz.
+•	Visual Studio 2022 ile açtıktan sonra F5'e basarak uygulamamızı açıyoruz.
+

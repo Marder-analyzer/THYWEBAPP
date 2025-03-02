@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Görevli Paneli</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .left-panel {
+            width: 30%;
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .flight-item {
+            background-color: #e3f2fd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .flight-number {
+            font-weight: bold;
+        }
+
+        .flight-status {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .right-panel {
+            width: 70%;
+            background-color: #fff;
+            padding: 20px;
+        }
+
+
+        .section-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .section {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+            .section h2 {
+                font-size: 18px;
+                color: #910e0e;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+
+        .section-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+            .form-group input {
+                width: calc(100% - 20px);
+                padding: 8px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            .form-group select {
+                width: calc(100% - 20px);
+                padding: 8px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            .form-group button {
+                padding: 10px 15px;
+                background-color: #910e0e;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+                .form-group button:hover {
+                    background-color: #ff1212;
+                }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sol Panel -->
+        <div class="left-panel">
+            <h1>Yaklaşan Uçuşlar</h1>
+            @if (ViewBag.FlightStatuses != null)
+            {
+                foreach (var flight in ViewBag.FlightStatuses)
+                {
+                    <div class="flight-item">
+                        <p class="flight-number">Uçuş: @flight.FlighNumber</p>
+                        <p class="flight-status">Durum: @flight.Status</p>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Yaklaşan uçuş bilgisi bulunmamaktadır.</p>
+            }
+
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <p style="color: red;">@ViewBag.ErrorMessage</p>
+            }
+        </div>
+
+        <!-- Sağ Panel -->
+        <div class="right-panel">
+            <h1>Görevli İşlemleri</h1>
+            <div class="section-container">
+                <!-- Onaylama İşlemleri -->
+                <div class="section">
+                    @if (TempData["SuccessUpdateFlightStatus"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessUpdateFlightStatus"]</p>
+                    }
+                    @if (TempData["ErrorUpdateFlightStatus"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorUpdateFlightStatus"]</p>
+                    }
+                    <h2>Onaylama İşlemleri</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Employee/UpdateFlightStatus">
+                            <div class="form-group">
+                                <label for="approve-flight-name">Uçuş Numarası:</label>
+                                <input type="text" id="approve-flight-name" name="flightNumber" placeholder="Uçuş numarası girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="isDeparture"> Kalkış Yaptı
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="isArrival"> İniş Yaptı
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Onayla</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Hata Raporu Gir -->
+                <div class="section">
+                    <div class="alerts">
+                        @if (TempData["SuccessReportError"] != null)
+                        {
+                            <p style="color: green;">@TempData["SuccessReportError"]</p>
+                        }
+                        @if (TempData["ErrorReportError"] != null)
+                        {
+                            <p style="color: red;">@TempData["ErrorReportError"]</p>
+                        }
+                    </div>
+
+                    <h2>Hata Raporu Gir</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Employee/ReportError">
+                            <div class="form-group">
+                                <label for="error-plane-name">Uçak Adı:</label>
+                                <input type="text" id="error-plane-name" name="aircraftName" placeholder="Uçak adı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="error-details">Hata Metni:</label>
+                                <input type="text" id="error-details" name="errorDescription" placeholder="Hata metnini girin" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Hata Raporla</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Uçak Yakıt Durumu -->
+                <div class="section">
+                    <div class="alerts">
+                        @if (TempData["SuccessUpdateFuelLevel"] != null)
+                        {
+                            <p style="color: green;">@TempData["SuccessUpdateFuelLevel"]</p>
+                        }
+                        @if (TempData["ErrorUpdateFuelLevel"] != null)
+                        {
+                            <p style="color: red;">@TempData["ErrorUpdateFuelLevel"]</p>
+                        }
+                    </div>
+                    <h2>Uçak Yakıt Durumu</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Employee/UpdateFuelLevel">
+                            <div class="form-group">
+                                <label for="fuel-plane-name">Uçak Adı:</label>
+                                <input type="text" id="fuel-plane-name" name="aircraftName" placeholder="Uçak adını girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fuel-level">Yakıt Miktarı:</label>
+                                <input type="number" id="fuel-level" name="fuelLevel" placeholder="Yakıt miktarını girin" step="0.01" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Yakıt Durumunu Güncelle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Uçak Müsaitliği -->
+                <div class="section">
+                    <div class="alerts">
+                        @if (TempData["SuccessUpdateAircraftAvailability"] != null)
+                        {
+                            <p style="color: green;">@TempData["SuccessUpdateAircraftAvailability"]</p>
+                        }
+                        @if (TempData["ErrorUpdateAircraftAvailability"] != null)
+                        {
+                            <p style="color: red;">@TempData["ErrorUpdateAircraftAvailability"]</p>
+                        }
+                    </div>
+                    <h2>Uçak Müsaitliği</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Employee/UpdateAircraftAvailability">
+                            <div class="form-group">
+                                <label for="availability-plane-name">Uçak Adı:</label>
+                                <input type="text" id="availability-plane-name" name="aircraftName" placeholder="Uçak adını girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="availability-status">Müsaitlik (true/false):</label>
+                                <select id="availability-status" name="availabilityStatus" required>
+                                    <option value="true">True</option>
+                                    <option value="false">False</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Müsaitlik Güncelle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Uçuş Kapıları -->
+                <div class="section">
+                    <div class="alerts">
+                        @if (TempData["SuccessUpdateFlightGates"] != null)
+                        {
+                            <p style="color: green;">@TempData["SuccessUpdateFlightGates"]</p>
+                        }
+                        @if (TempData["ErrorUpdateFlightGates"] != null)
+                        {
+                            <p style="color: red;">@TempData["ErrorUpdateFlightGates"]</p>
+                        }
+                    </div>
+                    <h2>Uçuş Kapıları</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Employee/UpdateFlightGates">
+                            <div class="form-group">
+                                <label for="gate-flight-name">Uçuş Adı:</label>
+                                <input type="text" id="gate-flight-name" name="flightName" placeholder="Uçuş adı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gate-departure-number">Kalkış Kapı Numarası:</label>
+                                <input type="number" id="gate-departure-number" name="departureGate" placeholder="Kalkış kapı numarasını girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gate-arrival-number">Varış Kapı Numarası:</label>
+                                <input type="number" id="gate-arrival-number" name="arrivalGate" placeholder="Varış kapı numarasını girin" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Kapıları Güncelle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Tüm başlıklara click eventi ekle
+        document.addEventListener('DOMContentLoaded', function () {
+            const headers = document.querySelectorAll('.section h2');
+            headers.forEach(header => {
+                header.addEventListener('click', function () {
+                    const content = this.nextElementSibling;
+                    if (content.style.display === 'block') {
+                        content.style.display = 'none';
+                    } else {
+                        content.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

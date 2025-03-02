@@ -1,0 +1,549 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türk Hava Yolları - Uçuş Ara</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #910e0e;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+            .navbar h1 {
+                margin: 0;
+                font-size: 24px;
+            }
+
+            .navbar .actions {
+                display: flex;
+                gap: 15px;
+                position: relative;
+            }
+
+                .navbar .actions a {
+                    color: white;
+                    text-decoration: none;
+                    font-size: 16px;
+                    background-color: #b31717;
+                    padding: 8px 15px;
+                    border-radius: 5px;
+                    transition: background-color 0.3s;
+                }
+
+                    .navbar .actions a:hover {
+                        background-color: #910e0e;
+                    }
+
+        .login-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: white;
+            color: black;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            width: 250px;
+        }
+
+            .login-dropdown select {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+            .login-dropdown label {
+                display: block;
+                margin: 10px 0 5px;
+                font-weight: bold;
+            }
+
+            .login-dropdown input[type="text"],
+            .login-dropdown input[type="password"] {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+
+            .login-dropdown input[type="checkbox"] {
+                margin-right: 5px;
+            }
+
+            .login-dropdown a {
+                color: #d71920;
+                text-decoration: none;
+                font-size: 14px;
+                margin-top: 10px;
+            }
+
+                .login-dropdown a:hover {
+                    text-decoration: underline;
+                }
+
+            .login-dropdown button {
+                width: 100%;
+                padding: 10px;
+                background-color: #d71920;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+                .login-dropdown button:hover {
+                    background-color: #b31717;
+                }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #d71920;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select, button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #d71920;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+            button:hover {
+                background-color: #b31717;
+            }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            color: black;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            width: 300px;
+        }
+
+            .dropdown label {
+                font-weight: bold;
+                margin-bottom: 5px;
+                display: block;
+            }
+
+            .dropdown input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+
+        .dropdown-container {
+            position: relative; /* Dropdown'ı düğmeye göre hizalar */
+        }
+            .dropdown button {
+                width: 100%;
+                padding: 10px;
+                background-color: #d71920;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+                .dropdown button:hover {
+                    background-color: #b31717;
+                }
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+   
+    <div class="navbar">
+        <h1>Türk Hava Yolları</h1>
+        <div class="actions">
+            <div class="dropdown-container">
+                <a id="viewTicketButton">Bilet Görüntüle</a>
+                <div class="dropdown" id="viewTicketDropdown">
+                    <form action="@Url.Action("Ticket", "Home")" method="get">
+                        <label for="TicketID">Bilet ID'niz:</label>
+                        <input type="number" id="TicketID" name="TicketID" placeholder="Bilet ID'nizi Giriniz" required />
+                        @if (TempData["ErrorTicket"] != null)
+                        {
+                            <p style="color: red;">@TempData["ErrorTicket"]</p>
+                        }
+                        <button type="submit" class="btn btn-primary">Görüntüle</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="dropdown-container">
+                <a id="manageTicketButton">Bilet Yönetimi</a>
+                <div class="dropdown" id="manageTicketDropdown">
+                    <form action="/Ticket/Edit" method="get">
+                        <label for="reservationID">Rezervasyon Kodu:</label>
+                        <input type="text" id="reservationID" name="reservationID" placeholder="Rezervasyon Kodunu Giriniz" required />
+                        <label for="lastName">Soyadınız:</label>
+                        <input type="text" id="lastName" name="lastName" placeholder="Soyadınızı Giriniz" required />
+                        @if (TempData["ErrorEditTicket"] != null)
+                        {
+                            <p style="color: red;">@TempData["ErrorEditTicket"]</p>
+                        }
+                        <button type="submit">Arama</button>
+                    </form>
+                </div>
+            </div>
+            <div class="dropdown-container">
+                <a id="flightStatusButton">Uçuş Durumu</a>
+                <div class="dropdown" id="flightStatusDropdown">
+                    <form action="/FlightState/Index" method="post">
+                        <label for="flightNumber">Uçuş Numarası:</label>
+                        <input type="text" id="flightNumber" name="flightNumber" placeholder="Uçuş Numaranızı Giriniz" required />
+                        @if (TempData["ErrorSearchFlight"] != null)
+                        {
+                            <p style="color: red;">@TempData["ErrorSearchFlight"]</p>
+                        }
+                        <button type="submit">Arama</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="dropdown-container">
+                <a id="checkInButton">Check-In</a>
+                <div class="dropdown" id="checkInDropdown">
+                    <form action="@Url.Action("CheckTicket", "Seat")" method="get">
+                        <label for="ticketNumber">Bilet Numaranız:</label>
+                        <input type="text" id="ticketID" name="ticketID" placeholder="Bilet Numaranızı Giriniz" required />
+                        @if (TempData["ErrorCheckTicket"] != null)
+                        {
+                            <p style="color: red;">@TempData["ErrorCheckTicket"]</p>
+                        }
+                        <button type="submit">Devam Et</button>
+                    </form>
+                </div>
+            </div>
+            @if (ViewBag.UserName != null && ViewBag.UserTypeID != null)
+            {
+                <!-- Kullanıcı giriş yaptıysa -->
+                <div class="dropdown-container">
+                    <a id="userNameButton" >@ViewBag.UserName</a>
+                </div>
+                    <!-- Kullanıcı tipine göre gösterim -->
+                <div class="dropdown-container">
+                        <form action="/Home/Logout" method="post">
+                            <button type="submit">Çıkış Yap</button>
+                        </form>
+                </div>
+            }
+            else
+            {
+              <div class="dropdown-container">
+                <!-- Kullanıcı giriş yapmadıysa Giriş Yap ve Üye Ol butonlarını göster -->
+                <a id="loginButton">Giriş Yap</a>
+                <div class="dropdown" id="loginDropdown">
+                    <form action="/Home/Login" method="post">
+                        <label for="loginType">Giriş Tercihi:</label>
+                        <select id="loginType" name="loginType" required>
+                            <option value="" disabled selected>Seçim Yapınız</option>
+                            <option value="MembershipNumber">Üyelik Numarası</option>
+                            <option value="Email">E-posta Adresi</option>
+                            <option value="TCIdentity">T.C. Kimlik Numarası</option>
+                            <option value="Phone">Cep Telefonu</option>
+                        </select>
+                        <label for="loginInput" id="inputLabel">Bilginizi Giriniz:</label>
+                        <input type="text" id="loginInput" name="loginInput" placeholder="Bilginizi giriniz" required />
+                        <input type="password" id="password" name="password" placeholder="Şifrenizi giriniz" required />
+                        <div>
+                            <input type="checkbox" id="rememberMe" name="rememberMe" />
+                            <label for="rememberMe">Beni Hatırla</label>
+                        </div>
+                            @if (TempData["ErrorLogin"] != null && !string.IsNullOrWhiteSpace(TempData["ErrorLogin"].ToString()))
+                            {
+                                <p style="color: red; margin-top: 10px;">@TempData["ErrorLogin"]</p>
+                            }
+                        <button type="submit">Giriş Yap</button>
+                    </form>
+                </div>
+              </div>
+              <div class="dropdown-container">
+                    <a href="/Users/Create" class="btn btn-primary">Üye Ol</a>
+              </div>
+            }
+           
+        </div>
+    </div>
+
+
+
+
+    <div class="container">
+        <h2>Uçuş Ara</h2>
+        <form action="/Flight/Index" method="get">
+            <label for="departureAirportName">Kalkış Havaalanı</label>
+            <select id="departureAirportName" name="departureAirportName" required>
+                @if (ViewBag.Airports != null && ViewBag.Airports.Count > 0)
+                {
+                    foreach (var airport in ViewBag.Airports)
+                    {
+                        <option value="@airport.AirportName">@airport.AirportName</option>
+                    }
+                }
+                else
+                {
+                    <option value="" disabled>Havaalanı bilgisi yok</option>
+                }
+            </select>
+
+            <label for="arrivalAirportName">Varış Havaalanı</label>
+            <select id="arrivalAirportName" name="arrivalAirportName" required>
+                @if (ViewBag.Airports != null && ViewBag.Airports.Count > 0)
+                {
+                    foreach (var airport in ViewBag.Airports)
+                    {
+                        <option value="@airport.AirportName">@airport.AirportName</option>
+                    }
+                }
+                else
+                {
+                    <option value="" disabled>Havaalanı bilgisi yok</option>
+                }
+            </select>
+
+            <label for="departureDate">Tarih</label>
+            <input type="datetime-local" id="departureDate" name="departureDate" required />
+
+            <label for="passengerType">Yolcu Türü</label>
+            <select id="passengerType" name="passengerType" required>
+                <option value="Yetişkin">Yetişkin</option>
+                <option value="Çocuk">Çocuk</option>
+                <option value="Bebek">Bebek</option>
+            </select>
+
+            <button type="submit">Uçuş Ara</button>
+        </form>
+    </div>
+
+    <script>
+        const loginButton = document.getElementById('loginButton');
+        const loginDropdown = document.getElementById('loginDropdown');
+
+        loginButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginDropdown.style.display = loginDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!loginDropdown.contains(e.target) && e.target !== loginButton) {
+                loginDropdown.style.display = 'none';
+            }
+        });
+    </script>
+    <script>
+        const loginTypeSelect = document.getElementById('loginType');
+        const loginInput = document.getElementById('loginInput');
+        const inputLabel = document.getElementById('inputLabel');
+
+        loginTypeSelect.addEventListener('change', () => {
+            const selectedValue = loginTypeSelect.value;
+
+            // Placeholder ve label'ı seçime göre güncelle
+            switch (selectedValue) {
+                case 'MembershipNumber':
+                    loginInput.placeholder = 'Üyelik numaranızı giriniz';
+                    inputLabel.textContent = 'Üyelik Numaranız:';
+                    break;
+                case 'Email':
+                    loginInput.placeholder = 'E-posta adresinizi giriniz';
+                    inputLabel.textContent = 'E-posta Adresiniz:';
+                    break;
+                case 'TCIdentity':
+                    loginInput.placeholder = 'T.C. Kimlik numaranızı giriniz';
+                    inputLabel.textContent = 'T.C. Kimlik Numaranız:';
+                    break;
+                case 'Phone':
+                    loginInput.placeholder = 'Cep telefonunuzu giriniz';
+                    inputLabel.textContent = 'Cep Telefonunuz:';
+                    break;
+                default:
+                    loginInput.placeholder = 'Bilginizi giriniz';
+                    inputLabel.textContent = 'Bilginiz:';
+            }
+        });
+    </script>
+    <script>
+        const manageTicketButton = document.getElementById('manageTicketButton');
+        const manageTicketDropdown = document.getElementById('manageTicketDropdown');
+
+        // Check-in/Bilet Yönetimi Dropdown aç/kapa işlevi
+        manageTicketButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            manageTicketDropdown.style.display = manageTicketDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!manageTicketDropdown.contains(e.target) && e.target !== manageTicketButton) {
+                manageTicketDropdown.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script>
+        const flightStatusButton = document.getElementById('flightStatusButton');
+        const flightStatusDropdown = document.getElementById('flightStatusDropdown');
+
+        // Uçuş Durumu Dropdown aç/kapa işlevi
+        flightStatusButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            flightStatusDropdown.style.display = flightStatusDropdown.style.display === 'block' ? 'none' : 'block';
+            manageTicketDropdown.style.display = 'none'; // Diğer dropdown'ı kapat
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!flightStatusDropdown.contains(e.target) && e.target !== flightStatusButton) {
+                flightStatusDropdown.style.display = 'none';
+            }
+        });
+
+    </script>
+    <script>
+        const extraBaggageButton = document.getElementById('extraBaggageButton');
+                // Ekstra Bagaj Dropdown aç/kapa işlevi
+        extraBaggageButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            extraBaggageDropdown.style.display = extraBaggageDropdown.style.display === 'block' ? 'none' : 'block';
+            manageTicketDropdown.style.display = 'none'; // Diğer dropdown'ı kapat
+            flightStatusDropdown.style.display = 'none'; // Diğer dropdown'ı kapat
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!extraBaggageDropdown.contains(e.target) && e.target !== extraBaggageButton) {
+                extraBaggageDropdown.style.display = 'none';
+            }
+        });
+    </script>
+    <script>
+        const checkInDropdown = document.getElementById('checkInDropdown');
+                // Koltuk Seçimi Dropdown aç/kapa işlevi
+        checkInButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            checkInDropdown.style.display = checkInDropdown.style.display === 'block' ? 'none' : 'block';
+            extraBaggageDropdown.style.display = 'none'; // Diğer dropdown'ı kapat
+            manageTicketDropdown.style.display = 'none'; // Diğer dropdown'ı kapat
+            flightStatusDropdown.style.display = 'none'; // Diğer dropdown'ı kapat
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!checkInDropdown.contains(e.target) && e.target !== checkInButton) {
+                checkInDropdown.style.display = 'none';
+            }
+        });
+    </script>
+    <script>
+        const viewTicketButton = document.getElementById('viewTicketButton');
+        const viewTicketDropdown = document.getElementById('viewTicketDropdown');
+
+        // Bilet Görüntüle Dropdown aç/kapa işlevi
+        viewTicketButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            viewTicketDropdown.style.display = viewTicketDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!viewTicketDropdown.contains(e.target) && e.target !== viewTicketButton) {
+                viewTicketDropdown.style.display = 'none';
+            }
+        });
+    </script>
+    <script>
+        const userNameButton = document.getElementById('userNameButton');
+        const userDropdown = document.getElementById('userDropdown');
+
+        userNameButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            userDropdown.style.display = userDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+                document.addEventListener("DOMContentLoaded", function () {
+            const userNameButton = document.getElementById('userNameButton');
+            const userDropdown = document.getElementById('userDropdown');
+
+            if (userNameButton && userDropdown) {
+                // Kullanıcı ismine tıklandığında dropdown'ı aç/kapa
+                userNameButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    userDropdown.style.display = userDropdown.style.display === 'block' ? 'none' : 'block';
+                });
+
+                // Dropdown dışında bir yere tıklandığında dropdown'ı kapat
+                document.addEventListener('click', (e) => {
+                    if (!userDropdown.contains(e.target) && e.target !== userNameButton) {
+                        userDropdown.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+
+    </script>
+
+</body>
+</html>

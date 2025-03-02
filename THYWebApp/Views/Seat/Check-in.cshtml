@@ -1,0 +1,459 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-In Ekranı</title>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <input type="hidden" id = "TicketID" name="TicketID" value="@ViewBag.TicketID" />
+        <!-- Sol Taraf -->
+        <div class="left-panel">
+            <h1>Uçuşunuza ait mevcut koltuk bilgileri</h1>
+            <div class="passenger-section">
+              <div class="passenger">
+                <h2 class="passenger-header">Yolcu</h2>
+                <div class="passenger-details" id="passenger-1">
+                  <p>Yolcu İsmi: @ViewBag.PassengerName</p>
+                  <p id="seat-info-1">Koltuk Numarası: </p>
+                </div>
+              </div>
+            </div>
+            <form id="seatForm" method="POST" action="/Seat/SaveSeatNumber">
+    <input type="hidden" name="__RequestVerificationToken" value="@ViewData["__RequestVerificationToken"]" />
+    <input type="hidden" id="selectedSeatInput" name="SeatNumber" value="" />
+    <button type="button" id="continue-button">Seçimi Kaydet</button>
+</form>
+
+        </div>
+
+        <div class="right-panel">
+            <div class="seat-types">
+                <!-- Boş Koltuk -->
+                <div class="seatm empty">
+                    <div class="icon">Boş</div>
+                    <p>Boş Koltuk</p>
+                </div>
+                <!-- Dolu Koltuk -->
+                <div class="seatm occupied">
+                    <div class="icon">Dolu</div>
+                    <p>Dolu Koltuk</p>
+                </div>
+                <!-- Seçili Koltuk -->
+                <div class="seatm user-seat">
+                    <div class="icon">Mevcut</div>
+                    <p>Mevcut Koltuk</p>
+                </div>
+            </div>
+            <div class="plane">
+            <div class="exit exit--front fuselage"></div>
+            <div class="cabin fuselage">
+                            @{
+                                int counter = 0; // Sayaç tanımlıyoruz
+                            }
+                            @foreach (var seat in ViewBag.SeatInfo)
+                            {
+                                if (counter % 6 == 0) // Her 6 koltukta bir yeni bir satır oluşturuyoruz
+                                {
+                                    if (counter > 0) // İlk satırda kapatma yapmıyoruz
+                                    {
+                                        @:</div> <!-- Önceki satırı kapat -->
+                                    }
+                                    @:<div class="row"> <!-- Yeni satır başlat -->
+                                }
+                                        <div class="seat">
+                                            <input type="checkbox"
+                                                   id="@seat.SeatNumber"
+                                                   data-status="@(seat.SeatNumber == ViewBag.UserSeat ? "user-seat" : seat.SeatStatus.ToLower())"
+                                                   @(seat.SeatNumber == ViewBag.UserSeat ? "checked" : "") />
+                                            <label for="@seat.SeatNumber"
+                                                   class="@(seat.SeatNumber == ViewBag.UserSeat ? "user-seat" : (seat.SeatStatus == "Occupied" ? "occupied" : "empty"))">
+                                                @seat.SeatNumber
+                                            </label>
+                                        </div>
+                                counter++;
+                            }
+                            @if (counter > 0) // Son satırı kapatıyoruz
+                            {
+                                @:</div>
+                            }
+            </div>
+
+
+    <div class="exit exit--back fuselage"></div>
+</div>
+
+<div id="successMessage" style="display:none; text-align: center; background-color: #d4edda; color: #155724; padding: 10px; margin-top: 10px; border: 1px solid #c3e6cb; border-radius: 5px;">
+    Seçim kaydedildi!
+</div>
+
+        </div>   
+        <!-- Başarı mesajı için bir div -->
+
+        <style>
+            /* Genel Ayarlar */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+/* Sol Panel */
+.left-panel {
+    background-color: #910e0e;
+    width: 35%;
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.left-panel h1 {
+    margin-bottom: 20px;
+    color: #d3d3d3;
+}
+
+/* Yolcu Bölümleri */
+.passenger-section {
+    width: 100%;
+    flex: 1;
+}
+
+.passenger {
+    margin-bottom: 30px;
+}
+
+.passenger-header {
+    background-color: #d3d3d3;
+    color: black;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 0 0 0 10px;
+}
+
+.passenger-header:hover {
+    background-color: #898989;
+}
+
+.passenger-details {
+    background-color: #d3d3d3;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+.passenger-details p {
+    margin: 5px 0;
+}
+
+
+
+
+/* Devam Et Butonu */
+#continue-button {
+    padding: 10px 40%;
+    background-color: #d3d3d3;
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px;
+    align-self: center;
+    position: sticky;
+    bottom: 10px;
+}
+
+#continue-button:hover {
+    background-color: #898989;
+}
+
+/* Koltuk Türleri */
+.seat-types {
+    position: absolute;
+    top: 20px;
+    left: 40%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.seatm {
+    text-align: center;
+    margin: 0 10px;
+}
+.seatm .icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.seatm.empty .icon {
+    background-color: #d3d3d3;
+    color: black;
+}
+
+.seatm.occupied .icon {
+    background-color: #555555;
+    color: white;
+}
+.seatm.user-seat .icon {
+    background-color: #f0ad4e;
+    color: white;
+}
+.seatm p {
+    margin: 0;
+    font-size: 12px;
+    color: #333;
+}
+
+/* Sağ Panel */
+.right-panel {
+    background-color: #e0e0e0;
+    width: 65%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.plane {
+    margin: 20px auto;
+    max-width: 300px;
+}
+
+.cockpit {
+    height: 250px;
+    position: relative;
+    text-align: center;
+    border-bottom: 5px solid #d8d8d8;
+}
+
+.cockpit h1 {
+    width: 60%;
+    margin: 100px auto 35px;
+}
+
+.exit {
+    position: relative;
+    height: 50px;
+    background: green;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 0 2px;
+}
+
+/* Koltuklar */
+.row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.seat {
+    display: flex;
+    flex: 0 0 calc(100% / 6 - 10px);
+    padding: 5px;
+    position: relative;
+}
+
+.seat input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.seat input[type="checkbox"]:checked + label {
+    background: #e70000;
+    animation: rubberBand 300ms both;
+}
+
+.seat label {
+    display: block;
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 4px 0;
+    background: #d3d3d3;
+    border-radius: 5px;
+}
+
+.seat label:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0 2px #5C6AFF;
+}
+
+/* Dolu Koltuk */
+.seat input[data-status="occupied"] + label {
+    background-color: #555555;
+    color: white;
+    cursor: not-allowed;
+}
+
+/* Mevcut Koltuk */
+.seat input[data-status="user-seat"] + label {
+    background-color: #f0ad4e; /* Turuncu tonunda */
+    color: white;
+    font-weight: bold;
+    border: 2px solid #d9534f; /* Daha belirgin bir kenarlık */
+}
+
+.seat input[data-status="user-seat"]:checked + label {
+    background-color: #f0ad4e; /* Turuncu tonunda */
+    color: white;
+    font-weight: bold;
+    border: 2px solid #d9534f; /* Daha belirgin bir kenarlık */
+}
+.seat input[data-status="empty"] + label {
+    background-color: #d3d3d3;
+    color: black;
+}
+
+/* Animasyon */
+keyframes rubberBand {
+    0% {
+        transform: scale3d(1, 1, 1);
+    }
+    30% {
+        transform: scale3d(1.25, 0.75, 1);
+    }
+    40% {
+        transform: scale3d(0.75, 1.25, 1);
+    }
+    50% {
+        transform: scale3d(1.15, 0.85, 1);
+    }
+    65% {
+        transform: scale3d(0.95, 1.05, 1);
+    }
+    75% {
+        transform: scale3d(1.05, 0.95, 1);
+    }
+    100% {
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+
+        </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const seats = document.querySelectorAll(".seat input");
+                const seatInfo1 = document.getElementById("seat-info-1");
+                const continueButton = document.getElementById("continue-button");
+                const successMessage = document.getElementById("successMessage");
+// Kullanıcının mevcut koltuğunu seçili olarak işaretle
+    let selectedSeat = document.querySelector(".seat input[data-status='user-seat']")?.id || null;
+                seatInfo1.textContent = selectedSeat ? `Koltuk Numarası: ${selectedSeat}` : "Koltuk Numarası: Seçim Yapılmadı";
+
+    seats.forEach((seat) => {
+        seat.addEventListener("change", () => {
+            const isUserSeat = seat.dataset.status === "user-seat";
+
+            if (isUserSeat) {
+                // Kullanıcı mevcut koltuğunu seçimini kaldırabiliyor
+                if (!seat.checked) {
+                    seat.dataset.status = "empty";
+                    seat.nextElementSibling.classList.remove("user-seat");
+                    seat.nextElementSibling.classList.add("empty");
+                    seatInfo1.textContent = "Koltuk Numarası: Seçim Yapılmadı";
+                    selectedSeat = null;
+                }
+                return;
+            }
+
+            // Diğer koltukların seçimini kontrol et
+            if (seat.dataset.status === "occupied") {
+                seat.checked = false; // Dolu koltuk seçimi engellenir
+                return;
+            }
+            const isChecked = seat.checked;
+
+if (isChecked) {
+                // Yeni koltuk seçimi yapılırken önceki koltuğu temizle
+                if (selectedSeat && selectedSeat !== seat.id) {
+                    const previousSeat = document.getElementById(selectedSeat);
+                    if (previousSeat) {
+                        previousSeat.checked = false;
+                        previousSeat.dataset.status = "empty";
+                        previousSeat.nextElementSibling.classList.remove("user-seat");
+                        previousSeat.nextElementSibling.classList.add("empty");
+                    }
+                }
+
+                selectedSeat = seat.id; // Yeni seçili koltuğu güncelle
+                seat.dataset.status = "user-seat";
+                seat.nextElementSibling.classList.remove("empty");
+                seat.nextElementSibling.classList.add("user-seat");
+                seatInfo1.textContent = `Koltuk Numarası: ${seat.id}`;
+            } else {
+                // Koltuk seçimi kaldırıldığında
+                selectedSeat = null;
+                seat.dataset.status = "empty";
+                seat.nextElementSibling.classList.remove("user-seat");
+                seat.nextElementSibling.classList.add("empty");
+                seatInfo1.textContent = "Koltuk Numarası: Seçim Yapılmadı";
+            }
+        });
+    });
+
+
+
+continueButton.addEventListener("click", async () => {
+    if (!selectedSeat) {
+        alert("Lütfen bir koltuk seçiniz!"); // Koltuk seçilmediğinde uyarı
+        return;
+    }
+
+    const ticketID = document.getElementById("TicketID").value;
+
+    try {
+        const response = await fetch(`/Seat/SaveSeatNumber?ticketID=${ticketID}&seatNumber=${encodeURIComponent(selectedSeat)}`, {
+            method: "POST"
+        });
+
+        if (response.ok) {
+            successMessage.textContent = "Koltuk başarıyla güncellendi!";
+            successMessage.style.display = "block";
+        } else {
+            alert("Koltuk güncelleme sırasında bir hata oluştu.");
+        }
+    } catch (error) {
+        console.error("Hata:", error);
+        alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+    }
+});
+
+
+
+            });
+        </script>
+</body>
+
+</html>

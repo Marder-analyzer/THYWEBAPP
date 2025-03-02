@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekstra Bagaj</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background-color: #910e0e;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+            .navbar h1 {
+                margin: 0;
+                font-size: 24px;
+                text-align: left;
+            }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #910e0e;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+            .header h1 {
+                margin: 0;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .form-group input {
+                width: calc(100% - 20px);
+                padding: 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .form-group button {
+                padding: 10px 15px;
+                background-color: #910e0e;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+                .form-group button:hover {
+                    background-color: #f32020;
+                }
+
+        .result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+
+            .result span {
+                font-weight: bold;
+            }
+
+        .static-info {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .payment-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+            .payment-button a {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #910e0e;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+            }
+
+                .payment-button a:hover {
+                    background-color: #f32020;
+                }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Türk Hava Yolları</h1>
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>Ekstra Bagaj</h1>
+        </div>
+        <div class="static-info">
+            <p><strong>Mevcut Bagaj:</strong> <span id="current-weight">15</span> kg</p>
+            <p><strong>Ekstra Bagaj Ücreti:</strong> <span id="price-per-kg">50</span> TL/kg</p>
+        </div>
+        <div class="form-group">
+            <label for="extra-weight">Ekstra Bagaj (kg):</label>
+            <input type="number" id="extra-weight" placeholder="Ekstra bagaj ağırlığını girin" min="0" required>
+        </div>
+        <div class="form-group">
+            <button onclick="calculateExtraCost()">Ücreti Hesapla</button>
+        </div>
+        <div class="result" id="result"></div>
+        <div class="payment-button" id="paymentButton" style="display: none;">
+            <a href="/payment">Ödeme Sayfasına Git</a>
+        </div>
+    </div>
+
+    <script>
+        function calculateExtraCost() {
+            const extraWeight = parseFloat(document.getElementById("extra-weight").value) || 0;
+            const pricePerKg = parseFloat(document.getElementById("price-per-kg").textContent) || 0;
+
+            const totalExtraCost = extraWeight * pricePerKg;
+
+            const resultDiv = document.getElementById("result");
+            const paymentButton = document.getElementById("paymentButton");
+
+            if (extraWeight > 0) {
+                resultDiv.innerHTML = `Toplam Ekstra Ücret: <span>${totalExtraCost.toFixed(2)} TL</span>`;
+                paymentButton.style.display = "block";
+            } else {
+                resultDiv.innerHTML = `<span>Lütfen geçerli bir ekstra bagaj ağırlığı girin.</span>`;
+                paymentButton.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

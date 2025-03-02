@@ -1,0 +1,42 @@
+﻿@model IEnumerable<THYWebApp.Models.NonMemberCustomer>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center">
+        @TempData["Error"]
+    </div>
+}
+
+<!-- NonMemberCustomer Listesi -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>E-posta</th>
+            <th>Telefon</th>
+            <th>Milliyet</th>
+            <th>Doğum Tarihi</th>
+            <th>Cinsiyet</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>@customer.PassengerFirstName</td>
+                <td>@customer.PassengerLastName</td>
+                <td>@customer.PassengerEmail</td>
+                <td>@customer.PassengerPhoneNumber</td>
+                <td>@customer.PassengerNationality</td>
+                <td>@customer.PassengerDateOfBirth.ToShortDateString()</td>
+                <td>@customer.PassengerGender</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,35 @@
+﻿@model THYWebApp.Models.Ticket
+
+<div class="container">
+    <h2>Bilet Bilgileri</h2>
+    <table class="table">
+        <tr>
+            <th>Bilet Numarası:</th>
+            <td>@Model.TicketID</td>
+        </tr>
+        <tr>
+            <th>Yolcu Adı:</th>
+            <td>@Model.FirstName</td>
+        </tr>
+        <tr>
+            <th>Kalkış Havaalanı:</th>
+            <td>@Model.DepartureAirportName</td>
+        </tr>
+        <tr>
+            <th>Varış Havaalanı:</th>
+            <td>@Model.ArrivalAirportName</td>
+        </tr>
+        <tr>
+            <th>Uçuş Tarihi:</th>
+            <td>@Model.DepartureDate.ToString("dd MMM yyyy HH:mm")</td>
+        </tr>
+        <tr>
+            <th>Uçuş Numarası:</th>
+            <td>@Model.FlighNumber</td>
+        </tr>
+        <tr>
+            <th>Havayolu Şirketi:</th>
+            <td>@Model.FlightAirlineCompany</td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,79 @@
+﻿@model THYWebApp.Models.NonMemberCustomer
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>NonMemberCustomer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="NonMemberCustomerID" />
+            <div class="form-group">
+                <label asp-for="PassengerFirstName" class="control-label"></label>
+                <input asp-for="PassengerFirstName" class="form-control" />
+                <span asp-validation-for="PassengerFirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerMiddleName" class="control-label"></label>
+                <input asp-for="PassengerMiddleName" class="form-control" />
+                <span asp-validation-for="PassengerMiddleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerLastName" class="control-label"></label>
+                <input asp-for="PassengerLastName" class="form-control" />
+                <span asp-validation-for="PassengerLastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerTCKimlik" class="control-label"></label>
+                <input asp-for="PassengerTCKimlik" class="form-control" />
+                <span asp-validation-for="PassengerTCKimlik" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerPassportNumber" class="control-label"></label>
+                <input asp-for="PassengerPassportNumber" class="form-control" />
+                <span asp-validation-for="PassengerPassportNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerEmail" class="control-label"></label>
+                <input asp-for="PassengerEmail" class="form-control" />
+                <span asp-validation-for="PassengerEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerPhoneNumber" class="control-label"></label>
+                <input asp-for="PassengerPhoneNumber" class="form-control" />
+                <span asp-validation-for="PassengerPhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerNationality" class="control-label"></label>
+                <input asp-for="PassengerNationality" class="form-control" />
+                <span asp-validation-for="PassengerNationality" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerDateOfBirth" class="control-label"></label>
+                <input asp-for="PassengerDateOfBirth" class="form-control" />
+                <span asp-validation-for="PassengerDateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerGender" class="control-label"></label>
+                <input asp-for="PassengerGender" class="form-control" />
+                <span asp-validation-for="PassengerGender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

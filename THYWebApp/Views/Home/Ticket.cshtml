@@ -1,0 +1,272 @@
+﻿@model THYWebApp.Models.Ticket
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Average+Sans&family=Cutive+Mono&family=Libre+Barcode+39&display=swap" rel="stylesheet">
+    <title>Bilet Detayları</title>
+    <style>
+        body {
+            background-color: #f5fff9;
+            margin: 0;
+            padding: 120px 15px;
+            text-align: end;
+        }
+
+        .container {
+            display: grid;
+        }
+
+        .ticket {
+            background-color: #fff;
+            border-radius: 50px;
+            box-shadow: 0px 0px 35px -25px;
+            display: grid;
+            grid-template-columns: 28% 42% 30%;
+            height: 300px;
+            margin: auto;
+            width: 750px;
+        }
+
+        img {
+            width: 60px;
+            margin-top: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #d3b779;
+        }
+
+        .item {
+            color: #a3a4a4;
+            font-family: "Average Sans", sans-serif;
+            font-size: 14px;
+            margin: 20px auto 0 auto;
+            text-transform: uppercase;
+        }
+
+        .lgdetail {
+            color: #616161;
+            font-family: "Average Sans", sans-serif;
+            font-size: 32px;
+            text-transform: uppercase;
+        }
+
+        .smdetail {
+            color: #616161;
+            font-family: "Average Sans", sans-serif;
+            font-size: 20px;
+            text-transform: capitalize;
+        }
+
+        /* start ticket-left*/
+        .ticket-left {
+            background-color: white;
+            border-radius: 50px 0 0 50px;
+            display: grid;
+            grid-template-columns: 50% 50%;
+            grid-template-rows: 1fr 1fr 1fr;
+            padding-right: 10px;
+        }
+
+        .corner-seat-container {
+            background: #f7f7f7;
+            border-radius: 50px 0 50px 0;
+            height: 100%;
+            padding-right: 25px;
+        }
+
+        .airplane {
+            font-size: 70px;
+            line-height: 100px;
+        }
+
+        .departure-time {
+            grid-column: 1 / span 2;
+            grid-row: 2;
+        }
+
+        .departing {
+            grid-column: 1 / span 2;
+            grid-row: 3;
+        }
+
+ 
+   
+        .ticket-middle {
+            background-color: #ffe9b7;
+            border-right: 1.7px dotted black;
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+            display: grid;
+            grid-template-columns: 20% 35% 45%;
+            grid-template-rows: 100px 100px 67px 28px;
+            padding-bottom: 5px;
+            padding-right: 30px;
+        }
+
+        .passenger-name {
+            grid-column: 1 / span 3;
+        }
+
+        .gate {
+            grid-column: 2;
+        }
+
+        .destination {
+            grid-column: 1 / span 2;
+        }
+
+        .serial {
+            background-color: #fff;
+            font-family: "Cutive Mono";
+            grid-column: 1 / span 3;
+            line-height: 21px;
+            margin-left: 30px;
+            margin-top: 7px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+
+        .ticket-right {
+            display: grid;
+            grid-template-columns: 65% 35%;
+            grid-template-rows: 45px 1fr 1fr 1fr 1fr 28px;
+        }
+
+        .smitem {
+            color: #a3a4a4;
+            font-family: "Average Sans", sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .exsmdetail {
+            color: #616161;
+            font-family: "Average Sans", sans-serif;
+            font-size: 17px;
+        }
+
+        .stub-flight {
+            grid-row: 2;
+            text-transform: uppercase;
+        }
+
+        .stub-seat {
+            grid-row: 3;
+            text-transform: uppercase;
+        }
+
+        .stub-depart {
+            grid-row: 4;
+        }
+
+        .stub-passenger {
+            grid-row: 5;
+        }
+
+        .barcode {
+            font-family: "Libre Barcode 39";
+            font-size: 45px;
+            grid-row: 1 / span 6;
+            line-height: 78.75px;
+            text-orientation: mixed;
+            text-align: center;
+            writing-mode: vertical-rl;
+        }
+
+        .jl-logo {
+            box-shadow: 0px 0px 9px -2px rgba(0, 0, 0, 0.35);
+            border-radius: 50%;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+    </style>
+</head>
+
+<body>
+    @if (Model != null)
+    {
+        <div class="container">
+            <div class="ticket">
+                <div class="ticket-left">
+                    <div class="corner-seat-container">
+                        <div class="item">KOLTUK</div>
+                        <div class="lgdetail">@Model.SeatNumber</div>
+                    </div>
+                    <div class="airplane-container">
+                        <img src="https://assets.codepen.io/1026437/blackAirplane.png" alt="airplane-img" />
+                    </div>
+                    <div class="departure-time">
+                        <div class="item">Uçuş Tarihi</div>
+                        <div class="lgdetail">@Model.DepartureDate.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="departing">
+                        <div class="item">Kalkış</div>
+                        <div class="smdetail">@Model.DepartureAirportName</div>
+                    </div>
+                </div>
+                <div class="ticket-middle">
+                    <div class="passenger-name">
+                        <div class="item">Yolcu Adı</div>
+                        <div class="smdetail">@Model.FirstName</div>
+                    </div>
+                    <div class="gate">
+                        <div class="item">Kapı Numarası</div>
+                        <div class="lgdetail">@Model.DepartureGateID</div>
+                    </div>
+                    <div class="flight">
+                        <div class="item">Uçuş Numarası</div>
+                        <div class="lgdetail">@Model.FlighNumber</div>
+                    </div>
+                    <div class="destination">
+                        <div class="item">Varış</div>
+                        <div class="smdetail">@Model.ArrivalAirportName</div>
+                    </div>
+
+                    <div class="serial">
+                        <div>@Model.TicketID</div>
+                    </div>
+                </div>
+                <div class="ticket-right">
+                    <div class="stub-flight">
+                        <div class="smitem">Uçuş NO</div>
+                        <div class="exsmdetail">@Model.FlighNumber</div>
+                    </div>
+                    <div class="stub-seat">
+                        <div class="smitem">KOLTUK</div>
+                        <div class="exsmdetail">@Model.SeatNumber</div>
+                    </div>
+                    <div class="stub-depart">
+                        <div class="smitem">KALKIŞ</div>
+                        <div class="exsmdetail">@Model.DepartureDate.ToString("HH:mm")</div>
+                    </div>
+                    <div class="stub-passenger">
+                        <div class="smitem">Yolcu</div>
+                        <div class="exsmdetail">@Model.FirstName</div>
+                    </div>
+                    <div class="barcode">3859384847</div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <img class="jl-logo" src="https://assets.codepen.io/1026437/jlRdLogo.png" alt="jl-logo" />
+            <div style="position: fixed; bottom: 20px; left: 20px;">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary" style="background-color: #007bff; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Anasayfaya Dön</a>
+            </div>
+        </footer>
+    }
+    else
+    {
+        <p>Bilet bulunamadı.</p>
+    }
+</body>
+
+</html>

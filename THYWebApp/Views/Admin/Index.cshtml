@@ -1,0 +1,917 @@
+﻿@model IEnumerable<THYWebApp.Models.AircraftErrorReport>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+
+    body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    }
+
+    .container {
+    display: flex;
+    width: 100%;
+    }
+
+    .left-panel {
+    width: 30%;
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+    }
+
+    .error-item {
+    background-color: #ffe4e4;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .error-title {
+    font-weight: bold;
+    }
+
+    .error-time {
+    color: #555;
+    font-size: 14px;
+    }
+
+    .error-plane {
+    color: #888;
+    font-size: 14px;
+    }
+
+    .right-panel {
+    width: 70%;
+    background-color: #fff;
+    padding: 20px;
+    }
+
+    .section-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    }
+
+    .section {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+    }
+
+    .section h2 {
+    font-size: 18px;
+    color: #910e0e;
+    cursor: pointer;
+    margin-bottom: 10px;
+    }
+
+    .section-content {
+    display: none;
+    margin-top: 10px;
+    }
+
+    .form-group {
+    margin-bottom: 10px;
+    text-align: left;
+    }
+
+    .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    }
+
+    .form-group input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    }
+
+    .form-group button {
+    padding: 10px 15px;
+    background-color: #910e0e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    }
+
+    .form-group button:hover {
+    background-color: #f32020;
+    }
+
+        .section-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+            .section-content table th {
+                background-color: #910e0e;
+                color: white;
+                font-weight: bold;
+                text-align: left;
+                padding: 10px;
+            }
+
+            .section-content table td {
+                padding: 10px;
+                border: 1px solid #ddd;
+                text-align: left;
+                color: #333;
+            }
+
+            .section-content table tbody tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            .section-content table tbody tr:hover {
+                background-color: #ffe4e4;
+            }
+
+        .section-content p {
+            color: #555;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .section-content {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+            .section-content table caption {
+                font-weight: bold;
+                font-size: 16px;
+                margin-bottom: 10px;
+                color: #910e0e;
+            }
+
+            /* Tablo başlıkları için hover efekti */
+            .section-content table th:hover {
+                background-color: #f32020;
+                cursor: pointer;
+            }
+    </style>
+    <script>
+                function toggleSection(header) {
+                    const content = header.nextElementSibling;
+                    const allContents = document.querySelectorAll('.section-content');
+
+                    allContents.forEach((section) => {
+            if (section !== content) {
+                section.style.display = 'none'; // Diğer açık olanları kapat
+            }
+        });
+
+        // Seçilen bölümün görüntülenmesini ayarla
+        content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        }
+            function loadAircrafts() {
+            fetch('/Admin/GetAircrafts') // Backend'deki action URL'i çağırır.
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('aircrafts-section').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Hata oluştu:', error);
+                    document.getElementById('aircrafts-section').innerHTML = '<p>Veriler yüklenemedi.</p>';
+                });
+        }
+                function loadFlights() {
+            fetch('/Admin/GetFlights') // Backend'deki action URL'i çağırır.
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('flights-section').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Hata oluştu:', error);
+                    document.getElementById('flights-section').innerHTML = '<p>Veriler yüklenemedi.</p>';
+                });
+        }
+        function loadAirports() {
+            fetch('/Admin/GetAirports') // Backend'deki action URL'i çağırır.
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('airports-section').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Hata oluştu:', error);
+                    document.getElementById('airports-section').innerHTML = '<p>Veriler yüklenemedi.</p>';
+                });
+        }
+                function loadUsers() {
+            fetch('/Admin/GetUsers') // Backend'deki action URL'i çağırır.
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('users-section').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Hata oluştu:', error);
+                    document.getElementById('users-section').innerHTML = '<p>Veriler yüklenemedi.</p>';
+                });
+        }
+                // Hem toggleSection hem de loadAircrafts fonksiyonunu çalıştıran fonksiyon
+        function handleAircraftsSection(header) {
+            toggleSection(header); // Bölümü aç/kapat
+            if (header.nextElementSibling.style.display === 'block') {
+                loadAircrafts(); // İçerik sadece bölüm açıldığında yüklenir
+            }
+        }
+                // Hem toggleSection hem de loadFlights fonksiyonunu çalıştırır
+        function handleFlightsSection(header) {
+            toggleSection(header); // Bölümü aç/kapat
+            if (header.nextElementSibling.style.display === 'block') {
+                loadFlights(); // İçerik sadece bölüm açıldığında yüklenir
+            }
+        }
+        function handleAirportsSection(header) {
+            toggleSection(header); // Bölümü aç/kapat
+            if (header.nextElementSibling.style.display === 'block') {
+                loadAirports(); // İçerik sadece bölüm açıldığında yüklenir
+            }
+        }
+                function handleUsersSection(header) {
+            toggleSection(header); // Bölümü aç/kapat
+            if (header.nextElementSibling.style.display === 'block') {
+                loadUsers(); // İçerik sadece bölüm açıldığında yüklenir
+            }
+        }
+
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Sol Panel -->
+        <div class="left-panel">
+            <h1>Hatalar</h1>
+
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <p style="color: red;">@ViewBag.ErrorMessage</p>
+            }
+            else if (Model != null)
+            {
+                <div class="error-item">
+                        @foreach (var error in Model)
+                        {
+                        <p class="error-title">@error.AircraftErrorDescription</p>
+                        <p class="error-time">
+                            @{
+                                var timeDifference = DateTime.Now - error.AircraftReportDate;
+                                if (timeDifference.TotalMinutes < 1)
+                                {
+                                    <span>Saniyeler önce</span>
+                                }
+                                else if (timeDifference.TotalMinutes < 60)
+                                {
+                                    <span>@Math.Floor(timeDifference.TotalMinutes) dakika önce</span>
+                                }
+                                else if (timeDifference.TotalHours < 24)
+                                {
+                                    <span>@Math.Floor(timeDifference.TotalHours) saat önce</span>
+                                }
+                                else
+                                {
+                                    <span>@Math.Floor(timeDifference.TotalDays) gün önce</span>
+                                }
+                            }
+                        </p>
+                        <p class="error-plane">Uçak : @error.AircraftName</p>
+                                
+                                
+                        }
+                    </div>
+            }
+            else
+            {
+                <p>Hiç hata bulunmamaktadır.</p>
+            }
+        </div>
+
+        <!-- Sağ Panel -->
+        <div class="right-panel">
+            <h1>Uçak Yönetimi</h1>
+            <div class="section-container">
+                <!-- Uçak Ekle -->
+                <div class="section">
+                    @if (TempData["SuccessAddAircraft"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessAddAircraft"]</p>
+                    }
+                    @if (TempData["ErrorAddAircraft"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorAddAircraft"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Uçak Ekle</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Admin/AddAircraft">
+                            <div class="form-group">
+                                <label for="plane-name">Uçak Adı:</label>
+                                <input type="text" id="plane-name" name="AircraftName" placeholder="Uçak adı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="plane-model">Uçak Modeli:</label>
+                                <input type="text" id="plane-model" name="AircraftModel" placeholder="Uçak modelini girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="plane-year">Üretim Yılı:</label>
+                                <input type="date" id="plane-year" name="AircraftProductionDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="plane-capacity">Kapasite:</label>
+                                <input type="number" id="plane-capacity" name="AircraftSeatCapacity" placeholder="Kapasiteyi girin" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Uçak Ekle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Uçak Güncelle -->
+                <div class="section">
+                    @if (TempData["SuccessUpdateAircraft"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessUpdateAircraft"]</p>
+                    }
+                    @if (TempData["ErrorUpdateAircraft"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorUpdateAircraft"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Uçak Güncelle</h2>
+
+                    <div class="section-content">
+                        <form action="/Admin/UpdateAircraftByName" method="post">
+                            <div class="form-group">
+                                <label for="update-plane-name">Uçak Adı:</label>
+                                <input type="text" id="update-plane-name" name="AircraftName" placeholder="Uçak adı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-plane-model">Uçak Modeli:</label>
+                                <input type="text" id="update-plane-model" name="AircraftModel" placeholder="Uçak modelini girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="update-plane-year">Üretim Yılı:</label>
+                                <input type="date" id="update-plane-year" name="ProductionDate" placeholder="Üretim yılını girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="update-plane-capacity">Kapasite:</label>
+                                <input type="number" id="update-plane-capacity" name="SeatCapacity" placeholder="Kapasiteyi girin">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Uçak Güncelle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Uçak Sil -->
+                <div class="section">
+                    @if (TempData["SuccessDeleteAircraft"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessDeleteAircraft"]</p>
+                    }
+                    @if (TempData["ErrorDeleteAircraft"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorDeleteAircraft"]</p>
+                    }
+                    <h2 onclick ="toggleSection(this)">Uçak Sil</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Admin/DeleteAircraft">
+                            <div class="form-group">
+                                <label for="delete-plane-name">Uçak Adı:</label>
+                                <input type="text" id="delete-plane-name" name="aircraftName" placeholder="Uçak adı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Uçak Sil</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Uçakları Gör -->
+                <div class="section">
+                    <h2 onclick="handleAircraftsSection(this)">Uçakları Gör</h2>
+                    <div id="aircrafts-section" class="section-content">
+
+                        @if (Model != null)
+                        {
+                            <table border="1" cellpadding="10">
+                                <thead>
+                                    <tr>
+                                        <th>Uçak ID</th>
+                                        <th>Uçak Adı</th>
+                                        <th>Model</th>
+                                        <th>Üretim Tarihi</th>
+                                        <th>Koltuk Kapasitesi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                        <tr>
+                                            <td>AircraftID</td>
+                                            <td>AircraftName</td>
+                                            <td>AircraftModel</td>
+                                            <td>AircraftProductionDate.ToShortDateString()</td>
+                                            <td>AircraftSeatCapacity</td>
+                                        </tr>
+                                    
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>Henüz uçak kaydı bulunmamaktadır.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+
+            <h1>Uçuş Yönetimi</h1>
+            <div class="section-container">
+                <!-- Uçuş Ekle -->
+                <div class="section">
+                    @if (TempData["SuccessAddFlight"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessAddFlight"]</p>
+                    }
+                    @if (TempData["ErrorAddFlight"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorAddFlight"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Uçuş Ekle</h2>
+                    <div class="section-content">
+                      <form method="post" action="/Admin/InsertFlight">
+                            <div class="form-group">
+                                <label for="flightNumber">Uçuş Numarası:</label>
+                                <input type="text" id="flightNumber" name="flightNumber" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="aircraftID">Uçak ID:</label>
+                                <input type="number" id="aircraftID" name="aircraftID" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="departureAirportID">Kalkış Havaalanı ID:</label>
+                                <input type="number" id="departureAirportID" name="departureAirportID" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="arrivalAirportID">İniş Havaalanı ID:</label>
+                                <input type="number" id="arrivalAirportID" name="arrivalAirportID" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="flightDepartureDateTime">Kalkış Tarihi ve Saati:</label>
+                                <input type="datetime-local" id="flightDepartureDateTime" name="flightDepartureDateTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="flightArrivalDateTime">İniş Tarihi ve Saati:</label>
+                                <input type="datetime-local" id="flightArrivalDateTime" name="flightArrivalDateTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="departureGateID">Kalkış Kapı ID:</label>
+                                <input type="number" id="departureGateID" name="departureGateID" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="arrivalGateID">İniş Kapı ID:</label>
+                                <input type="number" id="arrivalGateID" name="arrivalGateID" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="flightStatus">Uçuş Durumu:</label>
+                                <input type="text" id="flightStatus" name="flightStatus" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="flightAirlineCompany">Havayolu Şirketi:</label>
+                                <input type="text" id="flightAirlineCompany" name="flightAirlineCompany" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="flightPriceID">Uçuş Fiyat ID:</label>
+                                <input type="number" id="flightPriceID" name="flightPriceID" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Uçuş Ekle</button>
+                            </div>
+
+                      </form>
+                    </div>
+                </div>
+
+                <!-- Uçuş Güncelle -->
+                <div class="section">
+                    @if (TempData["SuccessUpdateFlight"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessUpdateFlight"]</p>
+                    }
+                    @if (TempData["ErrorUpdateFlight"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorUpdateFlight"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Uçuş Güncelle</h2>
+                    <div class="section-content">
+                        <form action="/Admin/UpdateFlight" method="post">
+                            <div class="form-group">
+                                <label for="update-flight-number">Uçuş Numarası:</label>
+                                <input type="text" id="update-flight-number" name="FlighNumber" placeholder="Uçuş numarası girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-flight-plane-name">Uçak Adı:</label>
+                                <input type="text" id="update-flight-plane-name" name="AircraftName" placeholder="İlgili uçak adı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-departure-airport">Kalkış Havaalanı Adı:</label>
+                                <input type="text" id="update-departure-airport" name="DepartureAirportName" placeholder="Kalkış havaalanı adı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-arrival-airport">İniş Havaalanı Adı:</label>
+                                <input type="text" id="update-arrival-airport" name="ArrivalAirportName" placeholder="İniş havaalanı adı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-departure-time">Kalkış Tarihi:</label>
+                                <input type="datetime-local" id="update-departure-time" name="FlightDepartureDateTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-arrival-time">İniş Tarihi:</label>
+                                <input type="datetime-local" id="update-arrival-time" name="FlightArrivalDateTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-flight-status">Uçuş Durumu:</label>
+                                <input type="text" id="update-flight-status" name="FlightStatus" placeholder="Uçuş durumunu girin">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Uçuş Güncelle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Uçuş Sil -->
+                <div class="section">
+                    @if (TempData["SuccessDeleteFlight"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessDeleteFlight"]</p>
+                    }
+                    @if (TempData["ErrorDeleteFlight"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorDeleteFlight"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Uçuş Sil</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Admin/DeleteFlight">
+                            <div class="form-group">
+                                <label for="delete-flight-id">Uçuş ID:</label>
+                                <input type="number" id="delete-flight-id" name="flightID" placeholder="Silmek istediğiniz uçuş ID'sini girin" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Uçuş Sil</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Uçuşları Gör -->
+                <div class="section">
+                    <h2 onclick="handleFlightsSection(this)">Uçuşları Gör</h2>
+                    <div class="section-content" id="flights-section" style="display: none;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Numarası</th>
+                                    <th>Uçak</th>
+                                    <th>Kalkış</th>
+                                    <th>Varış</th>
+                                    <th>Gecikme Süresi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                    <tr>
+                                        <td>FlighNumber</td>
+                                        <td>AircraftName</td>
+                                        <td>DepartureAirportName</td>
+                                        <td>ArrivalAirportName</td>
+                                        <td>FlightDelayTime</td>
+                                    </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <h1>Havaalanı Yönetimi</h1>
+            <div class="section-container">
+                <!-- Havaalanı Ekle -->
+                <div class="section">
+                    @if (TempData["SuccessAddAirport"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessAddAirport"]</p>
+                    }
+                    @if (TempData["ErrorAddAirport"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorAddAirport"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Havaalanı Ekle</h2>
+                    <div class="section-content">
+                        <form action="/Admin/AddAirport" method="post">
+
+                            <div class="form-group">
+                                <label for="airport-name">Havaalanı Adı:</label>
+                                <input type="text" id="airport-name" name="airportName" placeholder="Havaalanı adı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="airport-city">Şehir:</label>
+                                <input type="text" id="airport-city" name="airportCity" placeholder="Havaalanı şehrini girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="airport-country">Ülke:</label>
+                                <input type="text" id="airport-country" name="airportCountry" placeholder="Havaalanı ülkesini girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="airport-code">Kod:</label>
+                                <input type="text" id="airport-code" name="airportCode" placeholder="Havaalanı kodunu girin" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Havaalanı Ekle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Havaalanı Güncelle -->
+                <div class="section">
+                    @if (TempData["SuccessUpdateAirport"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessUpdateAirport"]</p>
+                    }
+                    @if (TempData["ErrorUpdateAirport"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorUpdateAirport"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Havaalanı Güncelle</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Admin/UpdateAirport">
+                            <div class="form-group">
+                                <label for="update-airport-name">Havaalanı Adı:</label>
+                                <input type="text" id="update-airport-name" name="AirportName" placeholder="Havaalanı adını girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-airport-city">Şehir:</label>
+                                <input type="text" id="update-airport-city" name="City" placeholder="Havaalanı şehrini girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="update-airport-country">Ülke:</label>
+                                <input type="text" id="update-airport-country" name="Country" placeholder="Havaalanı ülkesini girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="update-airport-code">Kod:</label>
+                                <input type="text" id="update-airport-code" name="AirportCode" placeholder="Havaalanı kodunu girin">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Havaalanı Güncelle</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+                <!-- Havaalanı Sil -->
+                <div class="section">
+                    @if (TempData["SuccessDeleteAirport"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessDeleteAirport"]</p>
+                    }
+                    @if (TempData["ErrorDeleteAirport"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorDeleteAirport"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Havaalanı Sil</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Admin/DeleteAirport">
+                            <div class="form-group">
+                                <label for="delete-airport-code">Havaalanı Kodu:</label>
+                                <input type="text" id="delete-airport-code" name="airportCode" placeholder="Silmek istediğiniz havaalanı kodunu girin" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Havaalanı Sil</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2 onclick="handleAirportsSection(this)">Havaalanlarını Gör</h2>
+                    <div class="section-content" id="airports-section" style="display: none;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Havaalanı ID</th>
+                                        <th>Havaalanı Adı</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    
+                                        <tr>
+                                            <td>AirportID</td>
+                                            <td>AirportName</td>
+                                        </tr>
+                                    
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <h1>Yetkili Yönetimi</h1>
+            <div class="section-container">
+                <!-- Yetkili Ekle -->
+                <div class="section">
+                    @if (TempData["SuccessAddStaff"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessAddStaff"]</p>
+                    }
+                    @if (TempData["ErrorAddStaff"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorAddStaff"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Yetkili Ekle</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Admin/AddStaff">
+                            <div class="form-group">
+                                <label for="staff-first-name">Ad:</label>
+                                <input type="text" id="staff-first-name" name="firstName" placeholder="Ad girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-middle-name">İkinci Ad (Opsiyonel):</label>
+                                <input type="text" id="staff-middle-name" name="middleName" placeholder="İkinci ad girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-last-name">Soyad:</label>
+                                <input type="text" id="staff-last-name" name="lastName" placeholder="Soyad girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-country">Ülke:</label>
+                                <input type="text" id="staff-country" name="country" placeholder="Ülke girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-passport-number">Pasaport Numarası:</label>
+                                <input type="text" id="staff-passport-number" name="passportNumber" placeholder="Pasaport numarası girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-phone">Telefon:</label>
+                                <input type="text" id="staff-phone" name="phone" placeholder="Telefon girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-birth-date">Doğum Tarihi:</label>
+                                <input type="date" id="staff-birth-date" name="birthDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-tckimlik">TCKimlik:</label>
+                                <input type="text" id="staff-tckimlik" name="tckimlik" placeholder="TCKimlik girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-address">Adres (Opsiyonel):</label>
+                                <input type="text" id="staff-address" name="address" placeholder="Adres girin">
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-email">E-posta:</label>
+                                <input type="email" id="staff-email" name="email" placeholder="E-posta girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-password">Şifre:</label>
+                                <input type="password" id="staff-password" name="password" placeholder="Şifre girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="staff-role">Yetki:</label>
+                                <input type="number" id="staff-role" name="role" placeholder="1, 2 veya 3 girin" min="1" max="3" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Yetkili Ekle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Yetkili Güncelle -->
+                <div class="section">
+                    @if (TempData["SuccessUpdateUser"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessUpdateUser"]</p>
+                    }
+                    @if (TempData["ErrorUpdateUser"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorUpdateUser"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Yetkili Güncelle</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Admin/UpdateUser">
+                            <div class="form-group">
+                                <label for="update-staff-tckimlik">TC Kimlik Numarası:</label>
+                                <input type="text" id="update-staff-tckimlik" name="UserTCKimlik" placeholder="TC Kimlik numarası girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-staff-first-name">Ad:</label>
+                                <input type="text" id="update-staff-first-name" name="UserName" placeholder="Ad girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-staff-last-name">Soyad:</label>
+                                <input type="text" id="update-staff-last-name" name="UserLastName" placeholder="Soyad girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-staff-country">Ülke:</label>
+                                <input type="text" id="update-staff-country" name="UserNationality" placeholder="Ülke girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-staff-birth-date">Doğum Tarihi:</label>
+                                <input type="date" id="update-staff-birth-date" name="UserDateOfBirth" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-staff-email">E-posta:</label>
+                                <input type="email" id="update-staff-email" name="UserEmail" placeholder="E-posta girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-staff-password">Şifre:</label>
+                                <input type="password" id="update-staff-password" name="UserPassword" placeholder="Şifre girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-staff-role">Yetki:</label>
+                                <input type="number" id="update-staff-role" name="UserTypeID" placeholder="1, 2 veya 3 girin" min="1" max="3" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Yetkili Güncelle</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+                <!-- Yetkili Sil -->
+                <div class="section">
+                    @if (TempData["SuccessDeleteStaff"] != null)
+                    {
+                        <p style="color: green;">@TempData["SuccessDeleteStaff"]</p>
+                    }
+                    @if (TempData["ErrorDeleteStaff"] != null)
+                    {
+                        <p style="color: red;">@TempData["ErrorDeleteStaff"]</p>
+                    }
+                    <h2 onclick="toggleSection(this)">Yetkili Sil</h2>
+                    <div class="section-content">
+                        <form method="post" action="/Admin/DeleteStaff">
+                            <div class="form-group">
+                                <label for="delete-staff-id">Yetkili ID:</label>
+                                <input type="number" id="delete-staff-id" name="userId" placeholder="Silmek istediğiniz Yetkili ID'sini girin" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Yetkili Sil</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Yetkilileri Gör -->
+                <div class="section">
+                    <h2 onclick="handleUsersSection(this)">Yetkilileri Gör</h2>
+                    <div class="section-content" id="users-section" style="display: none;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Yetki Derecesi</th>
+                                    <th>Adı</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td>UserTypeID</td>
+                                    <td>UserName</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+     

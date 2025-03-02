@@ -1,0 +1,55 @@
+﻿@model IEnumerable<THYWebApp.Models.Aircraft>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AircraftName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AircraftModel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AircraftProductionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AircraftSeatCapacity)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AircraftName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AircraftModel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AircraftProductionDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AircraftSeatCapacity)
+            </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AircraftID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AircraftID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.AircraftID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

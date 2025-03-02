@@ -1,0 +1,282 @@
+﻿@model IEnumerable<THYWebApp.Models.Flight>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<div class="navbar">
+    <h1>Türk Hava Yolları</h1>
+    <div class="nav-links">
+        <a class="active">Uçuş Seçimi</a>
+        <a>Yolcu Bilgileri</a>
+        <a>Ödeme</a>
+    </div>
+</div>
+<div class="container">
+    <h2 class="text-center">Uçuş Bilgileri</h2>
+
+        @if (TempData["Error"] != null)
+        {
+        <div class="alert alert-danger text-center">
+                @TempData["Error"]
+        </div>
+        }
+        else if (!Model.Any())
+        {
+        <div class="text-center">
+            <p>Belirtilen kriterlere uygun uçuş bulunamadı.</p>
+        </div>
+        }
+        else
+        {
+        <div class="flight-summary text-center">
+            <h3>Gidiş: @ViewBag.DepartureAirportName - @ViewBag.ArrivalAirportName</h3>
+            <h4>Tarih: @ViewBag.DepartureDate</h4>
+            <h5>Uçuş Süresi: @ViewBag.TravelDuration</h5>
+        </div>
+
+        <table class="table table-striped table-bordered text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Uçuş Numarası</th>
+                    <th>Kalkış Zamanı</th>
+                    <th>Varış Zamanı</th>
+                    <th>Havayolu Şirketi</th>
+                    <th>Fiyat</th>
+                    <th>Detaylar</th>
+                </tr>
+            </thead>
+            <tbody>
+                    @foreach (var flight in Model)
+                    {
+                    <tr data-toggle="collapse" data-target="#details-@flight.FlightID" class="clickable-row">
+                        <td>@flight.FlighNumber</td>
+                        <td>@flight.FlightDepartureDateTime.ToString("dd MMMM yyyy HH:mm")</td>
+                        <td>@flight.FlightArrivalDateTime.ToString("dd MMMM yyyy HH:mm")</td>
+                        <td>@flight.FlightAirlineCompany</td>
+                        <td>@flight.FlightPrice.ToString("C")</td>
+                        <td>
+                            <button class="btn btn-info btn-sm">Uçuş Ücretlerini Göster</button>
+                        </td>
+                    </tr>
+                    <tr id="details-@flight.FlightID" class="collapse">
+                        <td colspan="6">
+                            <div class="package-container">
+                                <div class="package">
+                                    <h5>Regular</h5>
+                                    <p>@(flight.RegularFlight.HasValue ? flight.RegularFlight.Value.ToString("C") : "Fiyat Bilinmiyor")</p>
+                                    <ul>
+                                        <li>15 kg bagaj hakkı</li>
+                                        <li>1 parça x 8 kg kabin bagajı</li>
+                                        <li>İkram hizmeti</li>
+                                        <li>690.00 TRY değişiklik ücreti (son 12 saate kadar + sınıf farkı ücreti)</li>
+                                        <li>870.00 TRY kesinti ile iade (son 12 saate kadar)</li>
+                                    </ul>
+                                    <form action="/Flight/SelectFlight" method="post">
+                                        <input type="hidden" name="flightId" value="@flight.FlightID" />
+                                        <input type="hidden" name="packageName" value="Regular" />
+                                        <input type="hidden" name="packagePrice" value="@(flight.RegularFlight ?? 0)" />
+                                        <input type="hidden" name="baggageAllowance" value="15" /> <!-- Bagaj hakkı kilogram cinsinden -->
+                                        <button type="submit" class="btn btn-danger btn-block">Uçuşu Seç</button>
+                                    </form>
+                                </div>
+                                <div class="package">
+                                    <h5>Extra</h5>
+                                    <p>@(flight.ExtraFlight.HasValue ? flight.ExtraFlight.Value.ToString("C") : "Fiyat Bilinmiyor")</p>
+                                    <ul>
+                                        <li>20 kg bagaj hakkı</li>
+                                        <li>1 parça x 10 kg kabin bagajı</li>
+                                        <li>İkram hizmeti</li>
+                                        <li>Ücretsiz ön sıra koltuk seçimi</li>
+                                        <li>250 Ekstra Mil</li>
+                                        <li>Ücretsiz değişiklik (Sınıf farkı ücreti alınabilir)</li>
+                                        <li>Kesintisiz iade (son 12 saate kadar)</li>
+                                    </ul>
+                                    <form action="/Flight/SelectFlight" method="post">
+                                        <input type="hidden" name="flightId" value="@flight.FlightID" />
+                                        <input type="hidden" name="packageName" value="Extra" />
+                                        <input type="hidden" name="packagePrice" value="@(flight.ExtraFlight ?? 0)" />
+                                        <input type="hidden" name="baggageAllowance" value="20" /> <!-- Bagaj hakkı kilogram cinsinden -->
+                                        <button type="submit" class="btn btn-danger btn-block">Uçuşu Seç</button>
+                                    </form>
+                                </div>
+                                <div class="package">
+                                    <h5>Premium</h5>
+                                    <p>@(flight.PremiumFlight.HasValue ? flight.PremiumFlight.Value.ToString("C") : "Fiyat Bilinmiyor")</p>
+                                    <ul>
+                                        <li>25 kg bagaj hakkı</li>
+                                        <li>1 parça x 10 kg kabin bagajı</li>
+                                        <li>İkram hizmeti</li>
+                                        <li>Ücretsiz ön sıra koltuk seçimi</li>
+                                        <li>350 Ekstra Mil</li>
+                                        <li>Ücretsiz değişiklik</li>
+                                        <li>Kesintisiz iade</li>
+                                    </ul>
+                                    <form action="/Flight/SelectFlight" method="post">
+                                        <input type="hidden" name="flightId" value="@flight.FlightID" />
+                                        <input type="hidden" name="packageName" value="Premium" />
+                                        <input type="hidden" name="packagePrice" value="@(flight.PremiumFlight ?? 0)" />
+                                        <input type="hidden" name="baggageAllowance" value="25" /> <!-- Bagaj hakkı kilogram cinsinden -->
+                                        <button type="submit" class="btn btn-danger btn-block">Uçuşu Seç</button>
+                                    </form>
+                                </div>
+                                <div class="package">
+                                    <h5>Business</h5>
+                                    <p>@(flight.BusinessFlight.HasValue ? flight.BusinessFlight.Value.ToString("C") : "Fiyat Bilinmiyor")</p>
+                                    <ul>
+                                        <li>30 kg bagaj hakkı</li>
+                                        <li>1 parça x 20 kg kabin bagajı</li>
+                                        <li>İkram hizmeti</li>
+                                        <li>VIP koltuk seçimi</li>
+                                        <li>500 Ekstra Mil</li>
+                                        <li>Ücretsiz değişiklik</li>
+                                        <li>Kesintisiz iade</li>
+                                    </ul>
+                                    <form action="/Flight/SelectFlight" method="post">
+                                        <input type="hidden" name="flightId" value="@flight.FlightID" />
+                                        <input type="hidden" name="packageName" value="Business" />
+                                        <input type="hidden" name="packagePrice" value="@(flight.BusinessFlight ?? 0)" />
+                                        <input type="hidden" name="baggageAllowance" value="30" /> <!-- Bagaj hakkı kilogram cinsinden -->
+                                        <button type="submit" class="btn btn-danger btn-block">Uçuşu Seç</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+            </tbody>
+        </table>
+        }
+    <div style="position: fixed; bottom: 20px; left: 20px;">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary" style="background-color: #007bff; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Anasayfaya Dön</a>
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<style>
+    .container {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        color: #d71920;
+        font-weight: bold;
+    }
+
+    .flight-summary {
+        margin-bottom: 20px;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+    .clickable-row {
+        cursor: pointer;
+    }
+
+    .collapse td {
+        background-color: #f9f9f9;
+    }
+
+    .package-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .package {
+        flex: 1 1 calc(25% - 15px);
+        background: #fff;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+        .package h5 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .package ul {
+            padding-left: 10px;
+            text-align: left;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+            .package ul li {
+                margin-bottom: 5px;
+            }
+
+    .btn {
+        margin-top: auto; /* Butonları en alta sabitler */
+        font-size: 0.85rem;
+        padding: 10px 0;
+        width: 100%;
+        background-color: #d71920;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-transform: uppercase;
+    }
+
+        .btn:hover {
+            background-color: #b31717;
+        }
+
+    .navbar {
+        background-color: #910e0e;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: white;
+    }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+        }
+
+            .navbar .nav-links a {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+                padding: 5px 15px;
+                border-radius: 5px;
+            }
+
+                .navbar .nav-links a.active {
+                    background-color: white;
+                    color: #910e0e;
+                }
+
+        .navbar .nav-links {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+</style>

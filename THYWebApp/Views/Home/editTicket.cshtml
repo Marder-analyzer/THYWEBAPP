@@ -1,0 +1,70 @@
+﻿@model THYWebApp.Models.Ticket
+
+<h2>Bilet Güncelle</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="TicketID" value="@Model.TicketID" />
+    <input type="hidden" name="ReservationID" value="@Model.ReservationID" />
+
+    <div>
+        <label>Rezervasyon Kodu:</label>
+        <input asp-for="ReservationID" readonly placeholder="@(Model.ReservationID)" />
+    </div>
+    <div>
+        <label>Havayolu Şirketi:</label>
+        <input readonly placeholder="@(Model.FlightAirlineCompany ?? "Bilgi Bulunamadı")" />
+    </div>
+    <div>
+        <label>Ad:</label>
+        <input readonly placeholder="@(Model.FirstName ?? "Bilgi Bulunamadı")" />
+    </div>
+
+    <div>
+        <label>Soyad:</label>
+        <input readonly placeholder="@(Model.LastName ?? "Bilgi Bulunamadı")" />
+    </div>
+
+    <div>
+        <label>Uçuş Numarası:</label>
+        <input readonly placeholder="@(Model.FlighNumber ?? "Bilgi Bulunamadı")" />
+    </div>
+    <div>
+        <label>Rezervasyon Tarihi:</label>
+        <input readonly placeholder="@(Model.ReservationDate)" />
+    </div>
+
+    <div>
+        <label>Bilet Durumu:</label>
+        <input readonly placeholder="@(Model.TicketStatus ?? "Bilgi Bulunamadı")" />
+    </div>
+
+    <div>
+        <label>E-posta:</label>
+        <input name="PassengerEmail" value="@Model.PassengerEmail" placeholder="Bilgi Bulunamadı" />
+    </div>
+
+    <div>
+        <label>Telefon Numarası:</label>
+        <input name="PassengerPhoneNumber" value="@Model.PassengerPhoneNumber" placeholder="Bilgi Bulunamadı" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+
+<!-- Silme Formu -->
+<form action="/Ticket/Delete" method="post">
+    <input type="hidden" name="ticketID" value="@Model.TicketID" />
+    <button type="submit" class="btn btn-danger">Sil</button>
+</form>
+<div style="position: fixed; bottom: 20px; left: 20px;">
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary" style="background-color: #007bff; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Anasayfaya Dön</a>
+</div>
