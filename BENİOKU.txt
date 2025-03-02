@@ -27,4 +27,3 @@ Görevli:
 •	Öncelikle projenin içinde bulunan DBFly.bacpac dosyasını(potansiyel veritabanı) MS SQL SERVER'a eklemek için Databases klasörüne sağ tıklayıp Import Data-tier Application'a tıklıyoruz. Burda gerekli bacpac uzantılı dosyamızı bulup ekliyoruz. Gerekli işlemleri tamamladıktan sonra veritabanımız hazır.
 •	THYWebApp klasoründen THYWebApp.sln dosyasını açıyoruz.
 •	Visual Studio 2022 ile açtıktan sonra F5'e basarak uygulamamızı açıyoruz.
-
