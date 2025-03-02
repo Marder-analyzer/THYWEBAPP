@@ -1,13 +1,3 @@
-![1](https://github.com/user-attachments/assets/f3a7bfcc-de2f-4536-8b9e-428f53964ba0)
-![2](https://github.com/user-attachments/assets/85003449-e1b2-4367-a650-575afde07081)
-![3](https://github.com/user-attachments/assets/1ba04f0e-68c5-4f07-a227-df7d74ea1167)
-![4](https://github.com/user-attachments/assets/2eca332b-91dc-4d10-adbd-aa69b9703178)
-![5](https://github.com/user-attachments/assets/e82a9b20-5201-478c-9991-51fcc9146d13)
-![6](https://github.com/user-attachments/assets/cbe3640d-be84-4f3a-852c-8e5d45f50411)
-![7](https://github.com/user-attachments/assets/f6780cfb-0591-4f8c-b74d-8a26978274eb)
-![görevli kısımın 2](https://github.com/user-attachments/assets/1855d214-972a-49bb-b35a-4947e8b7ca89)
-![görevli kısmı](https://github.com/user-attachments/assets/e443fb0e-20da-46c2-a8bc-73ddfac0d23c)
-
 
 # ✈️ THY Web Application
 
@@ -121,3 +111,15 @@ The system consists of three types of users: Administrator, Staff, and Customer.
 
 This project was developed to simplify operations in airline systems and to enhance understanding of database integration. It is an ideal project for beginners to learn about system structure! 🚀
 
+
+
+
+![1](https://github.com/user-attachments/assets/f3a7bfcc-de2f-4536-8b9e-428f53964ba0)
+![2](https://github.com/user-attachments/assets/85003449-e1b2-4367-a650-575afde07081)
+![3](https://github.com/user-attachments/assets/1ba04f0e-68c5-4f07-a227-df7d74ea1167)
+![4](https://github.com/user-attachments/assets/2eca332b-91dc-4d10-adbd-aa69b9703178)
+![5](https://github.com/user-attachments/assets/e82a9b20-5201-478c-9991-51fcc9146d13)
+![6](https://github.com/user-attachments/assets/cbe3640d-be84-4f3a-852c-8e5d45f50411)
+![7](https://github.com/user-attachments/assets/f6780cfb-0591-4f8c-b74d-8a26978274eb)
+![görevli kısımın 2](https://github.com/user-attachments/assets/1855d214-972a-49bb-b35a-4947e8b7ca89)
+![görevli kısmı](https://github.com/user-attachments/assets/e443fb0e-20da-46c2-a8bc-73ddfac0d23c)
